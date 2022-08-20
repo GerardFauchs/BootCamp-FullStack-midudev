@@ -1,0 +1,39 @@
+#root {
+  background-color: red;
+  border: 1px solid;
+}
+
+.encabezado {
+  background-color: rgb(255, 204, 143);
+  border: 1px solid;
+  text-align: center;
+}
+
+.navbar {
+  background-color: bisque;
+  border: 1px solid;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0%;
+  padding: 0%;
+  gap: 1rem;
+}
+
+.navbar ul li > a {
+  text-decoration: none;
+  /*padding-left: 1rem; utilizamod gap en ul*/
+}
+
+footer {
+  text-align: center;
+  background-color: chocolate;
+  border: 1px solid;
+}

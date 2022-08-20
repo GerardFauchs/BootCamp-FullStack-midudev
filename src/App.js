@@ -1,9 +1,12 @@
 import "./styles.css";
-import Note from "./components/Note";
+import { Note } from "./components/Note";
 import { useEffect, useState } from "react";
 
-export default function App() {
+export const App = (props) => {
   console.log("Render component App");
+
+  const [notes, setNotes] = useState(props.notes);
+  const [newNote, setNewNote] = useState("");
 
   const [posts, setPosts] = useState([]);
 
@@ -16,41 +19,49 @@ export default function App() {
         setPosts(json);
         console.log("Datos obtenidos");
       });
-  }, []); // Ejecutar solo cuando se renderiza el componente.
+  }, []); // Ejecutar solo cuando se renderiza el componente por primera vez.
 
-  const notes = [
-    {
-      id: 1,
-      content: "Hola que TreeWalker",
-      date: "2019-05-30T19:20:14.298Z",
-      important: true
-    },
-    {
-      id: 2,
-      content: "dfsdfdsfsdf que TreeWdsfsdfsfsdfalker",
-      date: "2019-04-30T19:20:14.298Z",
-      important: true
-    },
-    {
-      id: 3,
-      content: "dfsdfdsfsdf qgfhfghfghfghfghfghWdsfsdfsfsdfalker",
-      date: "2019-04-28T19:20:14.298Z",
-      important: true
-    }
-  ];
+  const handleChange = (event) => {
+    console.log(event.target.value);
+    setNewNote(event.target.value);
+  };
+
+  const handleClick = (event) => {
+    console.log("Crear Note");
+    const noteToAddToState = {
+      id: notes.length + 1,
+      content: newNote,
+      date: new Date().toISOString(),
+      important: Math.random() < 0.5
+    };
+    console.log(noteToAddToState);
+    setNotes(notes.concat(noteToAddToState));
+  };
 
   return (
     <div className="App">
-      <section>
-        <h1>Mostrando las notas</h1>
+      <section className="Notes">
+        <h1>Gestión de notas</h1>
+
+        <h2>Crear Note:</h2>
+        <aside>
+          <input
+            type="text"
+            placeholder="Entrar Note"
+            onChange={handleChange}
+          />
+          <button onClick={handleClick}>Crear Note</button>
+        </aside>
+
+        <h2>Listado Notes:</h2>
         {notes.map((note) => (
           <Note key={note.id} {...note} />
         ))}
       </section>
 
-      <section>
+      <section className="API">
         <h1>Atacando API jsonplaceholder.typicode.com</h1>
-        <h2>POSTS:</h2>
+        <h2>Listado Posts:</h2>
         {posts.map((post) => {
           return (
             <article key={post.id}>
@@ -63,4 +74,4 @@ export default function App() {
       </section>
     </div>
   );
-}
+};
