@@ -45,6 +45,13 @@ export const App = (props) => {
           setLoading(false);
         });*/
     }, 5000);
+
+    // Utilidad, se ejecuta este return lo primero en ejecutar esta funcion, despures ejecuta lo otro de arriba
+    // Podriamos utilizar para desuscribirse a un evento y arribar inscribrte.
+    /*
+    return () => {
+      console.log("removeEffect");
+    };*/
   }, []); // Ejecutar solo cuando se renderiza el componente por primera vez.
 
   const handleChange = (event) => {
