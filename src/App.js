@@ -7,6 +7,7 @@ export const App = (props) => {
 
   const [notes, setNotes] = useState(props.notes);
   const [newNote, setNewNote] = useState("");
+  const [showAll, setShowAll] = useState(true);
 
   const [posts, setPosts] = useState([]);
 
@@ -26,8 +27,10 @@ export const App = (props) => {
     setNewNote(event.target.value);
   };
 
-  const handleClick = (event) => {
+  const handleSubmit = (event) => {
+    event.preventDefault();
     console.log("Crear Note");
+
     const noteToAddToState = {
       id: notes.length + 1,
       content: newNote,
@@ -35,7 +38,14 @@ export const App = (props) => {
       important: Math.random() < 0.5
     };
     console.log(noteToAddToState);
-    setNotes(notes.concat(noteToAddToState));
+
+    // no hacer: notes.push(noteToAddToState), en React creamos nuevos estados, no podemos mutar el objeto.
+    setNotes([...notes, noteToAddToState]); // Este nos crea un nuevo arra a partir de valores
+    setNewNote(""); // limpiar input text
+  };
+
+  const handleShowAll = (event) => {
+    setShowAll(() => !showAll);
   };
 
   return (
@@ -45,18 +55,30 @@ export const App = (props) => {
 
         <h2>Crear Note:</h2>
         <aside>
-          <input
-            type="text"
-            placeholder="Entrar Note"
-            onChange={handleChange}
-          />
-          <button onClick={handleClick}>Crear Note</button>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              placeholder="Entrar Note"
+              onChange={handleChange}
+              value={newNote}
+            />
+            <input type="submit" value="Crear Note" />
+          </form>
+          <br />
+          <button onClick={handleShowAll}>
+            {showAll ? "Show only Important" : "Show All"}
+          </button>
         </aside>
 
         <h2>Listado Notes:</h2>
-        {notes.map((note) => (
-          <Note key={note.id} {...note} />
-        ))}
+        {notes
+          .filter((note) => {
+            if (showAll === true) return true;
+            return note.important === true;
+          })
+          .map((note) => (
+            <Note key={note.id} {...note} />
+          ))}
       </section>
 
       <section className="API">
