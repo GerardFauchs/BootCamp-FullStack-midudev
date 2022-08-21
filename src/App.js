@@ -1,6 +1,7 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
 import "./styles.css";
 import { Note } from "./components/Note";
-import { useEffect, useState } from "react";
 
 export const App = (props) => {
   console.log("Render component App");
@@ -11,15 +12,34 @@ export const App = (props) => {
 
   const [posts, setPosts] = useState([]);
 
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     console.log("useEffect fetch");
-    fetch("https://jsonplaceholder.typicode.com/posts")
-      .then((response) => response.json())
-      .then((json) => {
-        console.log(json);
-        setPosts(json);
-        console.log("Datos obtenidos");
-      });
+    setLoading(true);
+
+    setTimeout(() => {
+      // Simulando delay de connexión
+      // Con axios, mas facil y mejor
+      axios
+        .get("https://jsonplaceholder.typicode.com/posts")
+        .then((response) => {
+          console.log(response);
+          const { data } = response;
+          setPosts(data);
+          setLoading(false);
+        });
+
+      /*
+      fetch("https://jsonplaceholder.typicode.com/posts")
+        .then((response) => response.json())
+        .then((json) => {
+          console.log(json);
+          setPosts(json);
+          console.log("Datos obtenidos");
+          setLoading(false);
+        });*/
+    }, 5000);
   }, []); // Ejecutar solo cuando se renderiza el componente por primera vez.
 
   const handleChange = (event) => {
@@ -84,6 +104,7 @@ export const App = (props) => {
       <section className="API">
         <h1>Atacando API jsonplaceholder.typicode.com</h1>
         <h2>Listado Posts:</h2>
+        {loading ? <img src="./transrchivos.gif" alt="Cargando..." /> : ""}
         {posts.map((post) => {
           return (
             <article key={post.id}>
