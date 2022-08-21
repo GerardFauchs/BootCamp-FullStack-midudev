@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+
 import "./styles.css";
 import { Note } from "./components/Note";
+import { getAllNotes } from "./servicios/notes/getAllNotes";
+import { createNote } from "./servicios/notes/createNote";
 
 export const App = (props) => {
   console.log("Render component App");
@@ -13,6 +15,7 @@ export const App = (props) => {
   const [posts, setPosts] = useState([]);
 
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("Cargando...");
 
   useEffect(() => {
     console.log("useEffect fetch");
@@ -21,13 +24,15 @@ export const App = (props) => {
     setTimeout(() => {
       // Simulando delay de connexión
       // Con axios, mas facil y mejor
-      axios
-        .get("https://jsonplaceholder.typicode.com/posts")
-        .then((response) => {
-          console.log(response);
-          const { data } = response;
-          setPosts(data);
+      getAllNotes()
+        .then((notes) => {
+          setPosts(notes);
+          setError("");
           setLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setError("La API a Petado!");
         });
 
       /*
@@ -50,6 +55,22 @@ export const App = (props) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log("Crear Note");
+
+    const noteToAdd = {
+      title: newNote,
+      body: newNote,
+      userId: 1
+    };
+
+    createNote(noteToAdd)
+      .then((data) => {
+        alert(data.title + " " + data.body + " " + data.userId + " " + data.id);
+        setError("");
+      })
+      .catch((err) => {
+        console.log(err);
+        setError("La API a Petado!");
+      });
 
     const noteToAddToState = {
       id: notes.length + 1,
@@ -103,8 +124,13 @@ export const App = (props) => {
 
       <section className="API">
         <h1>Atacando API jsonplaceholder.typicode.com</h1>
+
+        {error ? <strong>{error}</strong> : ""}
+
         <h2>Listado Posts:</h2>
+
         {loading ? <img src="./transrchivos.gif" alt="Cargando..." /> : ""}
+
         {posts.map((post) => {
           return (
             <article key={post.id}>
