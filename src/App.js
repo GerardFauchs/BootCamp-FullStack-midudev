@@ -73,6 +73,8 @@ export const App = (props) => {
       .then((data) => {
         alert(data.title + " " + data.body + " " + data.userId + " " + data.id);
         setError("");
+        //Deberiamos hacer esto, recibimos los datos api en prevNote y añadimos la nueva nota
+        //setNotes((prevNotes) => prevNotes.concat(data));
       })
       .catch((err) => {
         console.log(err);
